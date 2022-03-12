@@ -3,7 +3,7 @@
 namespace MulkiAqi192\RulesUI;
 
 use pocketmine\Server;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 use pocketmine\plugin\PluginBase;
 
@@ -12,16 +12,17 @@ use pocketmine\command\CommandSender;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
+use jojoe77777\FormAPI\SimpleForm;
 
-class main extends PluginBase implements Listener {
+class Main extends PluginBase implements Listener {
 
-	public function onEnable(){
+	public function onEnable(): void{
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		if(is_null($this->getServer()->getPluginManager()->getPlugin("FormAPI"))){
 			$this->getLogger()->info("§cYou need FormAPI to use RulesUI Plugin! disabling plugin...");
 			$this->getServer()->getPluginManager()->disablePlugin($this);
 		} else {
-			$this->getLogger()->info("§aFormAPI is Founded! Enabling plugin.... Support me on PayPal if you like this plugin! §bhttps://paypal.me/jedimasters");
+			$this->getLogger()->info("§aFormAPI Found, enabling plugin. Support me on PayPal if you like this plugin! §bhttps://paypal.me/jedimasters");
 		}
 		@mkdir($this->getDataFolder());
 		$this->saveDefaultConfig();
@@ -31,7 +32,7 @@ class main extends PluginBase implements Listener {
 	public $onJoin = [];
 
 	public function onCommand(CommandSender $sender, Command $cmd, String $label, Array $args) : bool {
-
+		
 		switch($cmd->getName()){
 			case "rules":
 			 if($sender instanceof Player){
@@ -47,10 +48,8 @@ class main extends PluginBase implements Listener {
 	}
 
 	public function rules($player){
-		$api = $this->getServer()->getPluginManager()->getPlugin("FormAPI");
-		$form = $api->createSimpleForm(function (Player $player, int $data = null){
-			$result = $data;
-			if($result === null){
+		$form = new SimpleForm(function (Player $player, int $data = null){
+			if($data === null){
 				$this->rules($player);
 				return true;
 			}
@@ -73,10 +72,8 @@ class main extends PluginBase implements Listener {
 	}
 
 	public function accrules($player){
-		$api = $this->getServer()->getPluginManager()->getPlugin("FormAPI");
-		$form = $api->createSimpleForm(function (Player $player, int $data = null){
-			$result = $data;
-			if($result === null){
+		$form = new SimpleForm(function (Player $player, int $data = null){
+			if($data === null){
 				return true;
 			}
 		});
